@@ -1,0 +1,28 @@
+{% extends "social_network/layout.html" %}
+{% load static %}
+
+{% block main_content %}
+
+<div class="content" style="background-color: rgb(251, 245, 245); width: 800px; position: absolute; top: 60px; left: 6%; bottom: 0; overflow-y: auto;">
+    <h1>Followers of {{ user.username }}</h1>
+    <div class="row row-cols-1 row-cols-md-4" style="max-width: 95%;">
+        {% for follower in followers %}
+            <div class="col mb-3">
+                <div class="card" style="border: 1.5px solid black;">
+                    <div class="card-img-top" style="height: 180px; overflow: hidden;">
+                        <img src="{% if follower.profile_photo %}{{ follower.profile_photo.url }}{% else %}{% static 'path_to_default_image.jpg' %}{% endif %}" alt="{{ follower.username }} Profile Picture" style="width: 100%;">
+                    </div>
+                    <div class="card-body">
+                        <h3 class="card-title" style="font-size: 1rem;"><a href="{% url 'user_profile' follower.username %}">@{{ follower.username }}</a></h3>
+                        <p class="card-text" style="font-size: 0.8rem; font-weight: bold; max-width: 100%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{ follower.first_name|title }} <span></span> {{ follower.last_name|title }}</p>
+                        <h5 class="card-text" style="font-size: 0.5rem; font-weight: bold; max-width: 100%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: green;">{{ follower.department|title }} ; year {{ follower.year_of_study }}</h5>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+    
+</div>
+
+</html>
+{% endblock %}

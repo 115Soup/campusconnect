@@ -1,0 +1,123 @@
+{% extends "social_network/layout.html" %}
+{% load static %}
+
+{% block main_content %}
+
+
+
+
+<div class="content" style="background-color: rgb(251, 245, 245); width: 1000px; position: absolute; top: 60px; left: 10%; bottom: 0; overflow-y: auto;">
+    <div class="row mb-5">
+        <!-- Profile Photo Upload -->
+        <div class="col-md-4">
+            <div class="profile-photo text-center">
+                <div class="profile-photo-container text-center">
+                    {% if user.profile_photo %}
+                        <img src="{{ user.profile_photo.url }}" alt="Profile Photo" class="img-fluid rounded-circle fa-5x" style="max-width: 100%; max-height: 100%;" id="profile-photo">
+                    {% else %}
+                        <!-- If there is no profile photo, display a placeholder or a default image -->
+                        <i class="fas fa-user-circle fa-10x" id="profile-photo-placeholder"></i>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!-- User Information -->
+        <div class="col-md-8">
+            <div class="user-info">
+                <h3 style="color: rgb(0, 110, 255);">@{{user.username}}</h3>
+                {% if message %}
+                    <div class="alert alert-danger text-center" role="alert">
+                        {{ message }}
+                    </div>
+                {% endif %}
+                <form method="post" action="{% url 'my_profile' %}">
+                    {% csrf_token %}
+                    <!-- Existing form fields -->
+                    
+                    <div class="form-group">
+                        <label for="first-name">First Name</label>
+                        <input type="text" id="first-name" name="first-name" value="{{ user.first_name|title }}" disabled>
+                    </div>
+                    <div class="form-group">
+                        <label for="last-name">Last Name</label>
+                        <input type="text" id="last-name" name="last-name" value="{{ user.last_name|title }}" disabled>
+                    </div>
+                    <div class="form-group">
+                        <label for="gender">Gender</label>
+                        <input type="text" id="gender" name="gender" value="{{ user.gender }}" disabled>
+                    </div>
+                    <div class="form-group">
+                        <label for="department">Department</label>
+                        <input type="text" id="department" name="department" value="{{ user.department }}" disabled>
+                    </div>
+                    <div class="form-group">
+                        <label for="year-of-study">Year</label>
+                        <input type="text" id="year-of-study" name="year-of-study" value="{{ user.year_of_study }}" disabled>
+                    </div>
+                    
+                    
+                    <div class="following-followers">
+                        <div class="followers">
+                            <strong style="color: rgb(71, 115, 217);">Followers:</strong>
+                            <a href="{% url 'followers' user.username %}">{{ user.followers.count }}</a>
+                        </div>
+                        <div class="following">
+                            <strong style="color: rgb(71, 115, 217);">Following:</strong>
+                            <a href="{% url 'followings' user.username %}">{{ user.following.count }}</a>
+                        </div>
+                    </div>
+                    
+                    
+                    
+
+                    <!-- Add other form fields here -->
+                </form>
+                <form method="post" action="{% url 'follow_user' %}">
+                    {% csrf_token %}
+                    <input type="hidden" name="user_to_follow" value="{{ user.id }}">
+                    {% if user != request.user %}
+                        {% if user in request.user.following.all %}
+                            <button type="submit" class="btn btn-danger">Unfollow</button>
+                        {% else %}
+                            <button type="submit" class="btn btn-primary">Follow</button>
+                        {% endif %}
+                    {% endif %}
+                </form>
+                <br>
+                <div class="card bg-light" style="max-width: 50%;">
+                    <div class="card-body">
+                        <h5 class="card-title">Bio</h5>
+                        <div class="card-text">
+                            <p class="bio-text">{{ user.bio }}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="content">
+        <h1>Posts</h1>
+        
+        
+        <ul class="list-unstyled">
+            {% for post in posts %}
+            <li class="media" style="max-width: 65%;">
+                <img src="{{ post.author.profile_photo.url }}" alt="{{ post.author.username }} Profile Picture" class="profile-picture">
+                <div class="media-body">
+                    <strong>@{{ post.author }}</strong>
+                    <p>{{ post.content }}</p>
+                    <small class="text-muted">{{ post.created }}</small>
+                    
+                </div>
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+    <div class="content">
+        <a href="{% url 'user_posts' user.username %}" class="btn btn-secondary">View Posts</a>
+    </div>
+    
+</div>
+{% endblock %}

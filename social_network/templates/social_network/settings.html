@@ -1,0 +1,14 @@
+{% extends "social_network/layout.html" %}
+
+
+{% block main_content %}
+    <!-- Your existing content goes here -->
+
+    <a href="{% url 'logout_view' %}" class="btn btn-danger">Logout</a>
+
+{% endblock %}
+
+
+{% block nav_home_active %}
+    active
+{% endblock %}

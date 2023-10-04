@@ -1,0 +1,60 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>CampusConnect - Log in</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/login.css' %}">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+
+</head>
+<body>
+
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="row-md-6">
+                {% if message %}
+                    <div class="alert alert-danger text-center" role="alert">
+                        {{ message }}
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    
+    
+    <div class="container">
+        <div class="left">
+            <img src="{% static 'images/img1.png' %}" alt="Image 1">
+        </div>
+        <div class="right">
+            <h1 style="font-size: 3rem; color: #f4f6f7; font-weight: bold; text-align: center; text-shadow: 6px 6px 6px rgba(0, 0, 0, 0.2);">CampusConnect</h1>
+
+            <p style="font-size: 1rem; color: black; font-weight: bold; text-align: center; text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);">For VIU staff and students</p>
+
+            <form action="{% url 'login' %}" method="post">
+                {% csrf_token %}
+                <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
+                <div class="form-group">
+                    <label for="username">Username:</label>
+                    <input autofocus class="form-control" type="text" name="username" id="username" placeholder="Username" required>
+                </div>
+                <div class="form-group">
+                    <label for="password">Password:</label>
+                    <input class="form-control" type="password" name="password" id="password" placeholder="Password" required>
+                </div>
+                <button class="btn btn-primary" type="submit">Login</button>
+                <!-- Add "already have an account? login here" link -->
+             <p>Dont have an account ? <a href="{% url 'signup' %}">Signup here</a></p>
+            </form>
+            
+             <!-- Add About, Terms, and Privacy links -->
+            <div class="text-center">
+                <a href="" style="font-size: 1.4rem; color: #fcfdfd; text-decoration: none; margin-right: 10px;">About</a>
+                <a href="" style="font-size: 1.4rem; color: #fbfcfd; text-decoration: none; margin-right: 10px;">Terms</a>
+                <a href="" style="font-size: 1.4rem; color: #f9f9fa; text-decoration: none;">Privacy</a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
