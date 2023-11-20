@@ -6,6 +6,9 @@ from django.utils import timezone
 from django.dispatch import receiver
 
 
+
+
+
 class User(AbstractUser):
     # Other fields and methods here
 
@@ -51,10 +54,37 @@ class User(AbstractUser):
     def get_bio(self):
         return self.bio
     
+
+    
 class Post(models.Model):
     author = models.ForeignKey(User, on_delete=models.CASCADE)
     content = models.TextField(max_length=500)
     created = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f"{self.author} - {self.created}"
+        # Format the 'created' timestamp to a user-friendly string
+        formatted_time = self.created.strftime("%b %d, %Y %I:%M %p")
+        return f"@{self.author}'s post- (' {self.content[:20]}..' ) {formatted_time}"
+    
+
+
+
+class Comment(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='comments')
+    text = models.TextField()
+    created = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        # Format the 'created' timestamp to a user-friendly string
+        formatted_time = self.created.strftime("%b %d, %Y %I:%M %p")
+        return f"@{self.user} commented on {self.post}, on {formatted_time}"
+    
+
+
+
+class Mention(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='mentions')
+    post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='mentions', null=True)
+    comment = models.ForeignKey(Comment, on_delete=models.CASCADE, related_name='mentions', null=True)
+    created = models.DateTimeField(auto_now_add=True)
