@@ -1,0 +1,24 @@
+{% extends "social_network/layout.html" %}
+{% load static %}
+
+{% block main_content %}
+<div class="content" style="background-color: rgb(251, 245, 245); width: 100%; position: absolute; top: 60px; left: 10%; bottom: 0; overflow-y: auto;">
+    
+    <ul>
+        {% for mention in mentions %}
+            {% if request.user == mention.mentioned_user %}
+                <li>
+                    {% if mention.post %}
+                        <a href="{% url 'user_profile' mention.user.username %}">@{{ mention.user.username }}</a> mentioned you in a post:
+                        <p>"{{ mention.post.content }}"</p>
+                    {% else %}
+                        <a href="{% url 'user_profile' mention.user.username %}">@{{ mention.user.username }}</a> mentioned you in a comment:
+                        <p>"{{ mention.comment.content }}"</p>
+                    {% endif %}
+                </li>
+            {% endif %}
+        {% endfor %}
+    </ul>
+    
+</div>
+{% endblock %}
